@@ -72,19 +72,29 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
 CORS_ALLOW_HEADERS = ['*']
 
-# CSRF settings
+# CSRF settings - relaxed for dokploy deployment
 CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'http://localhost:8000,http://127.0.0.1:8000').split(',')
-CSRF_COOKIE_SECURE = False  # Set to False to work in various environments
-CSRF_USE_SESSIONS = True  # Store CSRF token in the session instead of cookie
+CSRF_COOKIE_SECURE = False  # Allow CSRF cookies over non-HTTPS
+CSRF_USE_SESSIONS = False  # Use cookies instead of sessions for CSRF
+CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript to access the CSRF cookie
+CSRF_COOKIE_SAMESITE = None  # Allow cross-site requests with credentials
+CSRF_COOKIE_DOMAIN = None  # Allow subdomains to access the CSRF cookie
 
-# Middleware configuration - optimized for static file handling
+# Paths that should be exempt from CSRF verification
+CSRF_EXEMPT_PATHS = [
+    '/upload-csv/',  # Main upload form
+    '/check-job-status/',  # AJAX endpoint for checking job status
+]
+
+# Middleware configuration - optimized for dokploy deployment
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',  # Keep security first
     'whitenoise.middleware.WhiteNoiseMiddleware',     # WhiteNoise right after security
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',         # CORS before CommonMiddleware
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # Custom CSRF middleware with more relaxed settings for dokploy
+    'matcher_app.middleware.FlexibleCSRFMiddleware',  # Use our custom CSRF middleware
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',

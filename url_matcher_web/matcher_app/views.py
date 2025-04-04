@@ -5,13 +5,17 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from .forms import CSVUploadForm
 from .models import URLMatcherJob
 from .tasks import process_url_matcher_job
 
 
+@ensure_csrf_cookie
+@csrf_exempt
 def upload_csv(request):
     """View for uploading CSV files for URL matching."""
+    # Ensure CSRF cookie is set for all requests
     if request.method == 'POST':
         form = CSVUploadForm(request.POST, request.FILES)
         if form.is_valid():

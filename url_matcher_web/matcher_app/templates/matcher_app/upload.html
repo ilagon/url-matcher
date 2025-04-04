@@ -63,7 +63,27 @@ Target Page exists,/contact,,Target Page exists,/contact-us
 
 {% block extra_js %}
 <script>
-    document.getElementById('upload-form').addEventListener('submit', function() {
+    // Function to get CSRF token from cookie
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Set up CSRF token for all AJAX requests
+    const csrftoken = getCookie('csrftoken');
+    
+    // Add event listener for form submission
+    document.getElementById('upload-form').addEventListener('submit', function(e) {
         // Show loading spinner
         document.getElementById('loading-spinner').classList.remove('d-none');
         document.getElementById('btn-text').textContent = 'Processing...';
@@ -74,6 +94,17 @@ Target Page exists,/contact,,Target Page exists,/contact-us
         alertDiv.className = 'alert alert-warning mt-3';
         alertDiv.innerHTML = '<strong>Processing your file...</strong> Please do not close or refresh this page.';
         this.parentNode.appendChild(alertDiv);
+    });
+
+    // Add CSRF token to all AJAX requests
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set CSRF token in headers for all AJAX requests
+        const xhr = new XMLHttpRequest();
+        const originalOpen = xhr.open;
+        xhr.open = function() {
+            originalOpen.apply(this, arguments);
+            this.setRequestHeader('X-CSRFToken', csrftoken);
+        };
     });
 </script>
 {% endblock %}
