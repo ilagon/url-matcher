@@ -7,3 +7,4 @@ psycopg2-binary>=2.9.5
 gunicorn>=21.2.0
 python-dotenv>=1.0.0
 whitenoise>=6.4.0
+Pillow>=9.5.0  # For favicon generation

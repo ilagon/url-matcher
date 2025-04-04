@@ -15,15 +15,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import RedirectView
 from matcher_app.views import check_job_status
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('matcher_app.urls')),
     path('check-job-status/<str:job_id>/', check_job_status, name='check_job_status'),
+    # Handle favicon.ico requests
+    re_path(r'^favicon\.ico$', RedirectView.as_view(url='/static/matcher_app/img/favicon.ico', permanent=True)),
 ]
 
 # Add media URL patterns for development

@@ -24,6 +24,11 @@ os.makedirs(settings.STATIC_ROOT, exist_ok=True)
 print(f'STATIC_ROOT is set to: {settings.STATIC_ROOT}')
 "
 
+# Generate favicon
+echo "Generating favicon..."
+cd /app/url_matcher_web
+python create_favicon.py
+
 # Apply database migrations
 echo "Applying database migrations..."
 python manage.py migrate --noinput
