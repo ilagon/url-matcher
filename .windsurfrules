@@ -1,0 +1,17 @@
+## Additional Considerations for the Agentic AI
+
+- Modularity: Encourage the AI to break down the task into smaller, manageable functions or modules (e.g., clean_urls(), exact_match(), partial_match(), generate_report()).
+
+- Parameterization: Design the script to be flexible by using parameters for file paths, matching thresholds, and matching strategies.
+
+- Logging and Error Handling: Implement robust logging to track progress, record decisions, and handle potential errors gracefully.
+
+- Efficiency: Optimize the code for performance, especially when dealing with large datasets (e.g., using vectorized operations instead of loops where possible).
+
+- Testability: Promote writing unit tests to ensure the correctness of individual functions and the overall matching logic.
+
+- Clarity and Readability: Emphasize the importance of clean, well-documented code that is easy to understand and maintain.
+
+- Iterative Development: Encourage the AI to follow an iterative approach, starting with basic exact matching and gradually adding more sophisticated partial matching techniques.
+
+- User Feedback: Build in mechanisms for the AI to request clarification or feedback on specific matching decisions or parameters.

@@ -1,0 +1,30 @@
+{% extends "matcher_app/base.html" %}
+
+{% block title %}Error - URL Matcher{% endblock %}
+
+{% block content %}
+<div class="p-5 mb-4 bg-light rounded-3">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Error Processing Your File</h1>
+        
+        <div class="alert alert-danger my-4">
+            <h4 class="alert-heading">Processing Failed</h4>
+            <p>There was an error processing your URL matching job.</p>
+            {% if job.error_message %}
+                <hr>
+                <p class="mb-0"><strong>Error details:</strong> {{ job.error_message }}</p>
+            {% endif %}
+        </div>
+        
+        <div class="mt-4">
+            <p>Job ID: <code>{{ job.id }}</code></p>
+            <p>Status: <span class="badge bg-danger">{{ job.status }}</span></p>
+            <p>Uploaded: {{ job.created_at }}</p>
+        </div>
+        
+        <div class="mt-4">
+            <a href="{% url 'matcher_app:upload_csv' %}" class="btn btn-primary btn-lg">Try Again</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

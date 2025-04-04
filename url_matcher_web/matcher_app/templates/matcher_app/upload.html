@@ -1,0 +1,79 @@
+{% extends "matcher_app/base.html" %}
+
+{% block title %}Upload CSV - URL Matcher{% endblock %}
+
+{% block content %}
+<div class="p-5 mb-4 bg-light rounded-3">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">URL Matcher</h1>
+        <p class="col-md-8 fs-4">Upload a CSV file containing Live URLs and Staging URLs to find matches.</p>
+        
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Upload CSV File</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data" id="upload-form">
+                            {% csrf_token %}
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.csv_file.id_for_label }}" class="form-label">{{ form.csv_file.label }}</label>
+                                {{ form.csv_file }}
+                                <div class="form-text">{{ form.csv_file.help_text }}</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.similarity_threshold.id_for_label }}" class="form-label">{{ form.similarity_threshold.label }}</label>
+                                {{ form.similarity_threshold }}
+                                <div class="form-text">{{ form.similarity_threshold.help_text }}</div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary" id="submit-btn">
+                                <span class="spinner-border spinner-border-sm d-none" id="loading-spinner" role="status" aria-hidden="true"></span>
+                                <span id="btn-text">Process CSV</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Expected CSV Format</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>The CSV file should contain columns for Live URLs and Staging URLs.</p>
+                        <p>Example format:</p>
+                        <pre class="bg-light p-2 rounded">
+Live Status,Live URL,,Staging Status,Staging URL
+Target Page exists,/about-us,,Target Page exists,/about-us
+Target Page exists,/contact,,Target Page exists,/contact-us
+                        </pre>
+                        <p class="text-muted small">The script will attempt to automatically detect the correct columns.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('upload-form').addEventListener('submit', function() {
+        // Show loading spinner
+        document.getElementById('loading-spinner').classList.remove('d-none');
+        document.getElementById('btn-text').textContent = 'Processing...';
+        document.getElementById('submit-btn').disabled = true;
+        
+        // Add a message to warn the user not to close the page
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-warning mt-3';
+        alertDiv.innerHTML = '<strong>Processing your file...</strong> Please do not close or refresh this page.';
+        this.parentNode.appendChild(alertDiv);
+    });
+</script>
+{% endblock %}

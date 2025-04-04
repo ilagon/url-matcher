@@ -1,0 +1,96 @@
+# Django related
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# URL Matcher specific output files
+url_matcher_output/
+exact_matches_*.csv
+partial_matches_*.csv
+unmatched_live_*.csv
+unmatched_staging_*.csv
+url_matching_results_*.csv
+url_matching_summary_*.txt
+url_matcher_*.log
+Holiday_Inn_Migration_Audit_*.csv
+
+# Media and user uploads
+url_matcher_web/media/
+url_matcher_web/media/csv_uploads/
+url_matcher_web/media/url_matcher_output/
+media/
+
+# Static files
+url_matcher_web/static/
+static/
+staticfiles/
+
+# Environment variables and virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Docker related
+.dockerignore
+nginx/ssl/
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Logs
+logs/
+
+# Temporary files
+*.swp
+*.swo
+*~
+.DS_Store
+.Trash-*
+
+# IDE specific files
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+.project
+.pydevproject
+.settings/
+
+# Secrets
+*.pem
+*.key
+*.crt
+*.cer
+secrets/
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Test data
+test_data/
+test_output/

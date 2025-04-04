@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - static_volume:/app/url_matcher_web/static
+      - media_volume:/app/url_matcher_web/media
+    env_file:
+      - .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=url_matcher_project.settings_production
+      - DEBUG=False
+      - ALLOWED_HOSTS=localhost,127.0.0.1,${DOKPLOY_DOMAIN:-your-domain.com}
+    depends_on:
+      - db
+    networks:
+      - url_matcher_network
+
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
+    networks:
+      - url_matcher_network
+
+networks:
+  url_matcher_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
