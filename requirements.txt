@@ -1,6 +1,6 @@
 pandas>=1.3.0
-difflib
-argparse
+# difflib
+# argparse
 Django>=4.2.0
 django-cors-headers>=4.7.0
 psycopg2-binary>=2.9.5
