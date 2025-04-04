@@ -3,7 +3,7 @@ FROM python:3.9-slim
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-ENV DJANGO_SETTINGS_MODULE=url_matcher_project.settings
+ENV DJANGO_SETTINGS_MODULE=url_matcher_project.settings_production
 
 # Set work directory
 WORKDIR /app
@@ -39,9 +39,6 @@ WORKDIR /app/url_matcher_web
 RUN echo "DEBUG=False" > .env \
     && echo "SECRET_KEY=placeholder_replace_this_in_production" >> .env \
     && echo "ALLOWED_HOSTS=localhost,127.0.0.1" >> .env
-
-# Collect static files
-RUN python manage.py collectstatic --noinput
 
 # Switch to non-root user for better security
 USER appuser

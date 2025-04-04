@@ -8,23 +8,29 @@ export DJANGO_SETTINGS_MODULE=url_matcher_project.settings_production
 echo "Waiting for database..."
 sleep 5
 
+# Create necessary directories if they don't exist
+echo "Ensuring media and static directories exist..."
+python manage.py shell -c "
+import os
+from django.conf import settings
+
+# Create media directories
+os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
+os.makedirs(os.path.join(settings.MEDIA_ROOT, 'csv_uploads'), exist_ok=True)
+os.makedirs(settings.URL_MATCHER_OUTPUT_DIR, exist_ok=True)
+
+# Create static directory
+os.makedirs(settings.STATIC_ROOT, exist_ok=True)
+print(f'STATIC_ROOT is set to: {settings.STATIC_ROOT}')
+"
+
 # Apply database migrations
 echo "Applying database migrations..."
 python manage.py migrate --noinput
 
 # Collect static files
 echo "Collecting static files..."
-python manage.py collectstatic --noinput
-
-# Create necessary directories if they don't exist
-echo "Ensuring media directories exist..."
-python manage.py shell -c "
-import os
-from django.conf import settings
-os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
-os.makedirs(os.path.join(settings.MEDIA_ROOT, 'csv_uploads'), exist_ok=True)
-os.makedirs(settings.URL_MATCHER_OUTPUT_DIR, exist_ok=True)
-"
+python manage.py collectstatic --noinput --clear
 
 # Start Gunicorn server
 echo "Starting Gunicorn server..."
