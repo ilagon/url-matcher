@@ -21,6 +21,7 @@ os.makedirs(settings.URL_MATCHER_OUTPUT_DIR, exist_ok=True)
 
 # Create static directory
 os.makedirs(settings.STATIC_ROOT, exist_ok=True)
+os.makedirs(os.path.join(settings.STATIC_ROOT, 'matcher_app', 'img'), exist_ok=True)
 print(f'STATIC_ROOT is set to: {settings.STATIC_ROOT}')
 "
 

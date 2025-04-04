@@ -15,6 +15,11 @@ services:
       - DJANGO_SETTINGS_MODULE=url_matcher_project.settings_production
       - DEBUG=False
       - ALLOWED_HOSTS=localhost,127.0.0.1,${DOKPLOY_DOMAIN:-your-domain.com}
+      - CORS_ALLOW_ALL_ORIGINS=True
+      - CSRF_TRUSTED_ORIGINS=http://localhost:8000,http://127.0.0.1:8000,https://${DOKPLOY_DOMAIN:-your-domain.com},http://${DOKPLOY_DOMAIN:-your-domain.com}
+      - SECURE_SSL_REDIRECT=False
+      - SESSION_COOKIE_SECURE=False
+      - CSRF_COOKIE_SECURE=False
     depends_on:
       - db
     networks:
