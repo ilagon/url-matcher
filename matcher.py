@@ -55,18 +55,14 @@ class URLMatcher:
             self.df = pd.read_csv(self.csv_path)
             
             # Check if the expected columns exist
-            if 'ALL LIVE URLs' not in self.df.columns or 'ALL STAGING URLS' not in self.df.columns:
-                # Try to infer columns based on the CSV structure
-                if len(self.df.columns) >= 4:
-                    # Assuming column 1 is Live URLs and column 4 is Staging URLs
-                    self.df = self.df.iloc[:, [0, 1, 3, 4]]
-                    self.df.columns = ['Live_Status', 'Live_URL', 'Staging_Status', 'Staging_URL']
-                else:
-                    raise ValueError("Could not identify Live and Staging URL columns")
+            if 'Live_URL' in self.df.columns and 'Staging_URL' in self.df.columns:
+                # Columns are already correctly named
+                pass
+            elif len(self.df.columns) == 2:
+                # Assume the first column is Live URL and the second is Staging URL
+                self.df.columns = ['Live_URL', 'Staging_URL']
             else:
-                # Rename columns for easier access
-                self.df.columns = ['Live_Status', 'Live_URL', 'Empty', 'Staging_Status', 'Staging_URL']
-                self.df = self.df.drop(columns=['Empty'])
+                raise ValueError("Could not identify Live and Staging URL columns. Expected 2 columns.")
             
             # Create a working copy
             self.working_df = self.df.copy()
@@ -92,12 +88,15 @@ class URLMatcher:
             # Remove leading/trailing whitespace
             url = url.strip()
             
-            # Ensure URL starts with a slash if it's a path
-            if url and not url.startswith('/') and not url.startswith('http'):
-                url = '/' + url
+            # Ensure URL starts with http if it doesn't already
+            if url and not url.startswith('http'):
+                if url.startswith('/'):
+                    url = 'http:/' + url  # Add http: to path-only URLs
+                else:
+                    url = 'http://' + url  # Add http:// to domain-only URLs
                 
-            # Remove duplicate slashes
-            url = re.sub(r'/{2,}', '/', url)
+            # Remove duplicate slashes (but preserve http:// and https://)
+            url = re.sub(r'(?<!:)/{2,}', '/', url)
             
             # URL decode
             url = unquote(url)
